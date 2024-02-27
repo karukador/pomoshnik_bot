@@ -1,1 +1,6 @@
-pip freeze > requirements.txt
+huggingface-hub==0.20.3
+requests==2.31.0
+telebot==0.0.5
+tokenizers==0.15.1
+torch==2.2.0
+transformers==4.37.2
