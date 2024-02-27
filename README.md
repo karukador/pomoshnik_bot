@@ -7,7 +7,7 @@ git clone https://github.com/karukador/pomoshnik_bot.git
 ```
 3) Установите requirements
 4) Получите токен через [BotFather](https://telegram.me/BotFather) в Telegram 
-5) Создайте файл config.py, со следующим кодом:
+5) Создайте файл config.py со следующим кодом:
 ```
 my_TOKEN = "ВАШ ТОКЕН"
 GPT_LOCAL_URL = 'http://localhost:1234/v1/chat/completions'
