@@ -6,6 +6,8 @@ import logging
 from gpt import GPT
 from config import MAX_TOKENS
 
+#@pomoshnik_ai_bot
+
 bot = telebot.TeleBot(token=my_TOKEN)
 
 MAX_LETTERS = MAX_TOKENS
