@@ -8,7 +8,7 @@ class GPT:
         self.URL = GPT_LOCAL_URL
         self.HEADERS = HEADERS
         self.MAX_TOKENS = MAX_TOKENS
-        self.assistant_content = "Пишем класс на python: "
+        self.assistant_content = "Решим задачу по шагам: "
 
     # Подсчитываем количество токенов в промте
     @staticmethod
