@@ -6,7 +6,7 @@ import logging
 from gpt import GPT
 from config import MAX_TOKENS
 
-#@pomoshnik_ai_bot
+# @pomoshnik_ai_bot
 
 bot = telebot.TeleBot(token=my_TOKEN)
 
@@ -81,9 +81,26 @@ def filter_bye(message):
     return word in message.text.lower()
 
 
+def filter_hi(message):
+    word = "привет"
+    return word in message.text.lower()
+
+
 def filter_wasup(message):
     word = "как дела?"
     return word in message.text.lower()
+
+
+def filter_sos(message):
+    word = "помогите"
+    return word in message.text.lower()
+
+
+@bot.message_handler(content_types=['text'], func=filter_bye)
+def say_bye(message):
+    user_name = message.from_user.first_name
+    logging.info("кто-то просит помощь")
+    bot.send_message(message.from_user.id, text=f"я могу помочь с решением задач, и то, иногда криво")
 
 
 @bot.message_handler(content_types=['text'], func=filter_bye)
@@ -95,7 +112,15 @@ def say_bye(message):
 
 @bot.message_handler(content_types=['text'], func=filter_wasup)
 def say_wasup(message):
+    logging.info("кому-то ответили, как дела")
     bot.send_message(message.from_user.id, text=f"Спасибо, что спросил_а! Дела отлично! 👍")
+
+
+@bot.message_handler(content_types=['text'], func=filter_hi)
+def say_wasup(message):
+    user_name = message.from_user.first_name
+    logging.info("с кем-то поздоровались")
+    bot.send_message(message.from_user.id, text=f"{user_name}, Привет! 🙃")
 
 
 # команда дебаг, отправка логов файлом
@@ -143,7 +168,8 @@ def get_promt(message):
             return
         # Сохраняем промт пользователя и начало ответа GPT в словарик users_history
         users_history[user_id] = {
-            'system_content': ("Ты - помощник для решения математических задач. Давай подробный ответ на русском языке."),
+            'system_content': (
+                "Ты - помощник для решения математических задач. Давай подробный ответ на русском языке."),
             'user_content': user_request,
             'assistant_content': "Решим задачу по шагам: "
         }
