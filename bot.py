@@ -56,10 +56,10 @@ logging.basicConfig(
 def start(message):
     user_name = message.from_user.first_name
     bot.send_message(message.chat.id,
-                     text=f"Привет, {user_name}! Я бот-помощник для решения математических задач!\n"
+                     text=f"Привет, {user_name}! 👋/n Я бот-помощник для решения математических задач!\n"
                           f"Ты можешь прислать условие задачи, а я постараюсь её решить.\n"
                           "Иногда ответы получаются слишком длинными - в этом случае ты можешь попросить продолжить.\n"
-                          "Напиши /help для дополнительной информации о командах.",
+                          "Напиши /help для дополнительной информации",
                      reply_markup=create_keyboard(['/help']))
 
 
@@ -69,7 +69,8 @@ def support(message):
     bot.send_message(message.from_user.id,
                      text="/start - приветствие\n"
                           "/help - помощь\n"
-                          "/solve_task - команда, чтобы приступить к решению задачи\n",
+                          "/solve_task - команда, чтобы приступить к решению задачи\n\n"
+                          "PS: к сожалению, бот иногда может работать неисправно, а модель gpt - слабовата, заранее извиняюсь 😿",
                      reply_markup=create_keyboard(["/solve_task"]))
 
 
@@ -92,7 +93,7 @@ def say_bye(message):
 
 @bot.message_handler(content_types=['text'], func=filter_wasup)
 def say_wasup(message):
-    bot.send_message(message.from_user.id, text=f"Спасибо, что спросил_а! Дела отлично!")
+    bot.send_message(message.from_user.id, text=f"Спасибо, что спросил_а! Дела отлично! 👍")
 
 
 # команда дебаг, отправка логов файлом
@@ -120,20 +121,21 @@ def continue_filter(message):
 def get_promt(message):
     user_id = str(message.from_user.id)
     if not message.text:
-        bot.send_message(user_id, "Необходимо отправить именно текстовое сообщение")
+        bot.send_message(user_id, "Необходимо отправить именно текстовое сообщение 😾")
         bot.register_next_step_handler(message, get_promt)
         return
 
     # Получаем текст сообщения от пользователя
     user_request = message.text
     if gpt.count_tokens(user_request) >= gpt.MAX_TOKENS:
-        bot.send_message(user_id, "Запрос превышает количество символов\nИсправь запрос")
+        bot.send_message(user_id, "Запрос превышает количество символов 😿\nИсправь запрос")
+        logging.info("У кого-то запрос привысил количество символов")
         bot.register_next_step_handler(message, get_promt)
         return
 
     if user_id not in users_history or users_history[user_id] == {}:
         if user_request == "Продолжить решение":
-            bot.send_message(message.chat.id, "Кажется, вы еще не задали вопрос.")
+            bot.send_message(message.chat.id, "Кажется, вы еще не задали вопрос. 😟")
             bot.register_next_step_handler(message, get_promt)
             return
         # Сохраняем промт пользователя и начало ответа GPT в словарик users_history
@@ -158,6 +160,7 @@ def get_promt(message):
 @bot.message_handler(content_types=['text'], func=lambda message: message.text.lower() == "завершить решение")
 def end_task(message):
     user_id = message.from_user.id
+    logging.info("Чьё-то решение завершилось")
     bot.send_message(user_id, "Текущие решение завершено")
     users_history[user_id] = {}
     solve_task(message)
