@@ -88,6 +88,7 @@ def filter_wasup(message):
 @bot.message_handler(content_types=['text'], func=filter_bye)
 def say_bye(message):
     user_name = message.from_user.first_name
+    logging.info("с кем-то попрощались")
     bot.send_message(message.from_user.id, text=f"{user_name}, пока...")
 
 
@@ -101,6 +102,7 @@ def say_wasup(message):
 def send_logs(message):
     with open("log_file.txt", "rb") as f:
         bot.send_document(message.chat.id, f)
+    logging.info("Кто-то использовал секретную функцию дебаг...")
 
 
 # Команда /solve_task и регистрация функции get_promt() для обработки любого следующего сообщения от пользователя
