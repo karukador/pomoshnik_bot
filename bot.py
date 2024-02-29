@@ -10,7 +10,6 @@ from config import MAX_TOKENS
 
 bot = telebot.TeleBot(token=my_TOKEN)
 
-MAX_LETTERS = MAX_TOKENS
 
 # Объект GPT
 gpt = GPT()
