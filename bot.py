@@ -122,13 +122,13 @@ def send_logs(message):
 # Команда /solve_task и регистрация функции get_promt() для обработки любого следующего сообщения от пользователя
 @bot.message_handler(commands=['solve_task'])
 def solve_task(message):
-    bot.send_message(message.chat.id, "Напиши условие новой задачи:")
+    bot.send_message(message.chat.id, "Напиши новый вопрос:")
     bot.register_next_step_handler(message, get_promt)
 
 
 # Фильтр для обработки кнопочки "Продолжить решение"
 def continue_filter(message):
-    button_text = 'Продолжить решение'
+    button_text = 'Продолжить'
     return message.text == button_text
 
 
@@ -150,7 +150,7 @@ def get_promt(message):
         return
 
     if user_id not in users_history or users_history[user_id] == {}:
-        if user_request == "Продолжить решение":
+        if user_request == "Продолжить":
             bot.send_message(message.chat.id, "Кажется, вы еще не задали вопрос. 😟")
             bot.register_next_step_handler(message, get_promt)
             return
@@ -171,12 +171,12 @@ def get_promt(message):
     users_history[user_id]["assistant_content"] += answer
     save_to_json()
 
-    keyboard = create_keyboard(["Продолжить решение", "Завершить решение"])
+    keyboard = create_keyboard(["Продолжить", "Завершить"])
     bot.send_message(message.chat.id, answer, reply_markup=keyboard)
 
 
 @bot.message_handler(commands=['end'])
-@bot.message_handler(content_types=['text'], func=lambda message: message.text.lower() == "завершить решение")
+@bot.message_handler(content_types=['text'], func=lambda message: message.text.lower() == "завершить")
 def end_task(message):
     user_id = message.from_user.id
     logging.info("Чьё-то решение завершилось")
